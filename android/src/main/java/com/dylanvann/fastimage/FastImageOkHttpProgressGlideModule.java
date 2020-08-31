@@ -40,13 +40,19 @@ public class FastImageOkHttpProgressGlideModule extends LibraryGlideModule {
             @NonNull Glide glide,
             @NonNull Registry registry
     ) {
-        OkHttpClient client = OkHttpClientProvider
-                .getOkHttpClient()
-                .newBuilder()
-                .addInterceptor(createInterceptor(progressListener))
-                .build();
-        OkHttpUrlLoader.Factory factory = new OkHttpUrlLoader.Factory(client);
-        registry.replace(GlideUrl.class, InputStream.class, factory);
+    try{
+    OkHttpClient client = OkHttpClientProvider
+                    .getOkHttpClient()
+                    .newBuilder()
+                    .addInterceptor(createInterceptor(progressListener))
+                    .build();
+            OkHttpUrlLoader.Factory factory = new OkHttpUrlLoader.Factory(client);
+            if (registry != null) {
+                 registry.replace(GlideUrl.class, InputStream.class, factory);
+            }
+    }catch (Exception e){
+                e.printStackTrace();
+     }
     }
 
     private static Interceptor createInterceptor(final ResponseProgressListener listener) {
